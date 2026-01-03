@@ -67,27 +67,42 @@
     }
   </script>
 </head>
-  <script>
+<script>
 function talk() {
   let user = document.getElementById("userInput").value.toLowerCase();
   let reply = document.getElementById("reply");
 
-  if (user.includes("name")) {
-    reply.innerText = "My name is Himanshu's AI 🤖";
+  if (user.includes("hello") || user.includes("hi")) {
+    reply.innerText = "Hello Himanshu 👋 Kaise ho?";
   }
-  else if (user.includes("hello")) {
-    reply.innerText = "Hello! Kaise ho 😊";
+
+  else if (user.includes("madhav")) {
+    reply.innerText = "Mera naam Madhav hai 🤖";
   }
+
+  else if (user.includes("time")) {
+    let time = new Date().toLocaleTimeString();
+    reply.innerText = "⏰ Abhi time hai: " + time;
+  }
+
+  else if (user.includes("date")) {
+    let date = new Date().toLocaleDateString();
+    reply.innerText = "📅 Aaj ki date hai: " + date;
+  }
+
   else if (user.includes("study")) {
-    reply.innerText = "Daily consistency hi success ka secret hai 💪📚";
+    reply.innerText = "Roz thoda-thoda padhna hi success ki key hai 📚🔥";
   }
+
   else if (user.includes("who are you")) {
-    reply.innerText = "I am a simple AI created by Himanshu 😎";
+    reply.innerText = "Main Himanshu ke dwara banaya gaya AI hoon 😎";
   }
+
   else {
-    reply.innerText = "Sorry, main abhi seekh raha hoon 😅";
+    reply.innerText = "🤔 Ye mujhe abhi nahi aata, par main seekh raha hoon!";
   }
 }
+</script>
   </script>
 
 <body>
