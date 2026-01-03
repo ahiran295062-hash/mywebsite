@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Himanshu AI</title>
+<title>Himanshu Memory AI</title>
 
 <style>
 body{
@@ -11,7 +11,6 @@ body{
   font-family: Arial, sans-serif;
   background:#ece5dd;
 }
-
 .header{
   background:#075e54;
   color:white;
@@ -19,47 +18,35 @@ body{
   text-align:center;
   font-size:20px;
 }
-
 .chat-box{
   height:75vh;
   padding:10px;
   overflow-y:auto;
 }
-
 .msg{
   max-width:70%;
   padding:10px;
   margin:8px 0;
   border-radius:10px;
-  font-size:15px;
 }
-
 .user{
   background:#dcf8c6;
   margin-left:auto;
-  border-bottom-right-radius:0;
 }
-
 .bot{
   background:white;
-  margin-right:auto;
-  border-bottom-left-radius:0;
 }
-
 .input-box{
   display:flex;
   padding:10px;
   background:#f0f0f0;
 }
-
 input{
   flex:1;
   padding:10px;
   border-radius:20px;
   border:1px solid #ccc;
-  outline:none;
 }
-
 button{
   margin-left:8px;
   padding:10px 15px;
@@ -67,52 +54,64 @@ button{
   border-radius:50%;
   background:#075e54;
   color:white;
-  font-size:16px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">🤖 Himanshu AI</div>
+<div class="header">🧠 Himanshu Memory AI</div>
 
 <div class="chat-box" id="chat">
-  <div class="msg bot">Hello Himanshu 👋 Main tumhara AI hoon</div>
+  <div class="msg bot">नमस्ते 👋 मैं तुम्हारा Memory AI हूँ</div>
 </div>
 
 <div class="input-box">
-  <input type="text" id="userInput" placeholder="Message likho...">
+  <input type="text" id="userInput" placeholder="Message लिखो...">
   <button onclick="send()">➤</button>
 </div>
 
 <script>
+let memory = {
+  name: "",
+  subject: ""
+};
+
 function send(){
   let input = document.getElementById("userInput");
   let text = input.value.toLowerCase();
   if(text==="") return;
 
   let chat = document.getElementById("chat");
-
   chat.innerHTML += `<div class="msg user">${text}</div>`;
   input.value = "";
 
   setTimeout(()=>{
-    let reply = "🤔 Main abhi seekh raha hoon";
+    let reply = "मैं समझ नहीं पाया 🤔";
 
-    if(text.includes("hello") || text.includes("hi"))
-      reply = "Hello 👋 Kaise ho?";
-
-    else if(text.includes("time"))
-      reply = "⏰ Time: " + new Date().toLocaleTimeString();
-
-    else if(text.includes("date"))
-      reply = "📅 Date: " + new Date().toLocaleDateString();
-
-    else if(text.includes("name"))
-      reply = "Mera naam Himanshu AI hai 🤖";
-
-    else if(text.includes("study"))
-      reply = "Roz padhna = success 📚🔥";
+    if(text.includes("my name is")){
+      memory.name = text.replace("my name is","").trim();
+      reply = "अच्छा 👍 मैं तुम्हारा नाम याद रखूँगा: " + memory.name;
+    }
+    else if(text.includes("i study")){
+      memory.subject = text.replace("i study","").trim();
+      reply = "वाह 📚 मैं याद रखूँगा कि तुम " + memory.subject + " पढ़ते हो";
+    }
+    else if(text.includes("what is my name")){
+      reply = memory.name ? 
+        "तुम्हारा नाम " + memory.name + " है 😊" :
+        "तुमने अभी नाम नहीं बताया ❌";
+    }
+    else if(text.includes("what do i study")){
+      reply = memory.subject ?
+        "तुम " + memory.subject + " पढ़ते हो 📖" :
+        "तुमने अभी विषय नहीं बताया ❌";
+    }
+    else if(text.includes("hello")){
+      reply = memory.name ?
+        "नमस्ते " + memory.name + " 👋" :
+        "नमस्ते 👋";
+    }
 
     chat.innerHTML += `<div class="msg bot">${reply}</div>`;
     chat.scrollTop = chat.scrollHeight;
