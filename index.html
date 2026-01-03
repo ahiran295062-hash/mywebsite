@@ -7,37 +7,27 @@
   <style>
     body {
       background: #0f172a;
-      font-family: Arial, sans-serif;
+      font-family: Arial;
       color: white;
     }
-
     .box {
       max-width: 400px;
       margin: 60px auto;
       background: #020617;
       padding: 20px;
       border-radius: 10px;
-    }
-
-    h2 {
       text-align: center;
     }
-
     #reply {
-      min-height: 60px;
       margin: 15px 0;
       padding: 10px;
-      background: #020617;
       border: 1px solid #334155;
       border-radius: 6px;
+      min-height: 40px;
     }
-
     button {
-      width: 100%;
       padding: 10px;
-      background: #38bdf8;
-      border: none;
-      border-radius: 6px;
+      width: 100%;
       font-size: 16px;
       cursor: pointer;
     }
@@ -48,14 +38,24 @@
 
   <div class="box">
     <h2>🤖 Himanshu AI</h2>
-
-    <div id="reply">यहाँ जवाब आएगा...</div>
-
+    <div id="reply">यहाँ जवाब आएगा</div>
     <button onclick="askAI()">Ask AI</button>
   </div>
 
-  <!-- JS हमेशा नीचे ही रहेगा -->
-  <script src="script.js"></script>
+  <script>
+    async function askAI() {
+      const reply = document.getElementById("reply");
+      reply.innerText = "सोच रहा हूँ...";
+
+      try {
+        const res = await fetch("https://api.quotable.io/random");
+        const data = await res.json();
+        reply.innerText = data.content;
+      } catch (e) {
+        reply.innerText = "Internet या code error";
+      }
+    }
+  </script>
 
 </body>
 </html>
