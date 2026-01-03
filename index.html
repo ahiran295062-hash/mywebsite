@@ -123,6 +123,18 @@ async function askAI() {
   let data = await res.json();
   document.getElementById("reply").innerText = data.content;
 }
+<script>
+async function getOnlineQuote() {
+  let chat = document.getElementById("chat");
+
+  chat.innerHTML += `<div class="msg user">Give me an online quote</div>`;
+
+  let response = await fetch("https://api.quotable.io/random");
+  let data = await response.json();
+
+  chat.innerHTML += `<div class="msg bot">🌐 Quote: "${data.content}"</div>`;
+  chat.scrollTop = chat.scrollHeight;
+}
 </script>
 
 <button onclick="askAI()">Ask AI</button>
