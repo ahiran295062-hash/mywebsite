@@ -1,30 +1,45 @@
-async function sendMessage() {
-  const input = document.getElementById("userInput");
-  const chatBox = document.getElementById("chatBox");
+const API_KEY = "PASTE_YOUR_GROQ_API_KEY_HERE";
 
-  if (input.value.trim() === "") return;
+async function send() {
+  let input = document.getElementById("userInput");
+  let text = input.value.trim();
+  if (text === "") return;
 
-  chatBox.innerHTML += `<div class="user">${input.value}</div>`;
+  let chat = document.getElementById("chat");
 
-  const userText = input.value;
+  // User message
+  chat.innerHTML += `<div class="msg user">${text}</div>`;
   input.value = "";
 
-  chatBox.innerHTML += `<div class="bot">Thinking...</div>`;
+  // Loading message
+  let loadingId = "loading_" + Date.now();
+  chat.innerHTML += `<div class="msg bot" id="${loadingId}">सोच रहा हूँ 🤔...</div>`;
+  chat.scrollTop = chat.scrollHeight;
 
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "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"
-    },
-    body: JSON.stringify({
-      model: "llama3-8b-8192",
-      messages: [{ role: "user", content: userText }]
-    })
-  });
+  try {
+    let res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + API_KEY
+      },
+      body: JSON.stringify({
+        model: "llama3-8b-8192",
+        messages: [
+          { role: "system", content: "तुम एक मददगार हिंदी AI हो" },
+          { role: "user", content: text }
+        ]
+      })
+    });
 
-  const data = await response.json();
+    let data = await res.json();
+    let reply = data.choices[0].message.content;
 
-  chatBox.lastChild.remove();
-  chatBox.innerHTML += `<div class="bot">${data.choices[0].message.content}</div>`;
+    document.getElementById(loadingId).innerHTML = reply;
+    chat.scrollTop = chat.scrollHeight;
+
+  } catch (e) {
+    document.getElementById(loadingId).innerHTML =
+      "❌ Error: AI से कनेक्ट नहीं हो पाया";
+  }
 }
