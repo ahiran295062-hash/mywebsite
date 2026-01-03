@@ -17,61 +17,46 @@ body{
   padding:15px;
   text-align:center;
   font-size:20px;
-  font-weight:bold;
-}
-#loginBox{
-  padding:15px;
-  text-align:center;
-}
-#loginBox input{
-  padding:10px;
-  width:70%;
-  border-radius:8px;
-  border:none;
-}
-#loginBox button{
-  padding:10px 15px;
-  border:none;
-  border-radius:8px;
-  background:#22c55e;
-  color:black;
-  font-weight:bold;
-  margin-left:5px;
 }
 .chat{
-  padding:10px;
-  height:60vh;
+  padding:15px;
+  height:70vh;
   overflow-y:auto;
 }
 .msg{
-  margin:8px 0;
-  padding:10px;
-  border-radius:10px;
   max-width:80%;
+  padding:10px;
+  margin:8px 0;
+  border-radius:10px;
 }
 .user{
-  background:#2563eb;
+  background:#22c55e;
   margin-left:auto;
+  color:black;
 }
 .bot{
   background:#334155;
 }
 .input-box{
   display:flex;
-  padding:10px;
+  position:fixed;
+  bottom:0;
+  width:100%;
   background:#020617;
+  padding:10px;
 }
-.input-box input{
+input{
   flex:1;
   padding:10px;
-  border-radius:10px;
+  border-radius:20px;
   border:none;
 }
-.input-box button{
-  margin-left:5px;
-  padding:10px;
+button{
+  margin-left:8px;
+  padding:10px 15px;
   border:none;
-  border-radius:10px;
+  border-radius:50%;
+  background:#22c55e;
   font-size:18px;
 }
 </style>
@@ -81,108 +66,54 @@ body{
 
 <div class="header">🌐 Himanshu Internet AI</div>
 
-<div id="loginBox">
-  <input id="username" placeholder="अपना नाम लिखें">
-  <button onclick="login()">Login</button>
-</div>
-
 <div class="chat" id="chat">
   <div class="msg bot">नमस्ते 👋 मैं Internet से जुड़ा AI हूँ</div>
 </div>
 
 <div class="input-box">
-  <input id="userInput" placeholder="कुछ भी पूछो...">
+  <input id="userInput" placeholder="सवाल लिखो..." />
   <button onclick="send()">➤</button>
 </div>
 
 <script>
-// ===== MEMORY =====
-let memory = {
-  name: localStorage.getItem("name") || ""
-};
+const API_KEY = "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";
 
-// ===== SPEAK =====
-function speak(text){
-  let u = new SpeechSynthesisUtterance(text);
-  u.lang = "hi-IN";
-  speechSynthesis.speak(u);
-}
-
-// ===== LOGIN =====
-function login(){
-  let name = document.getElementById("username").value.trim();
-  if(name==="") return;
-  localStorage.setItem("name", name);
-  memory.name = name;
-  document.getElementById("loginBox").style.display="none";
-  botMsg("स्वागत है " + name + " 😊");
-}
-
-// ===== AUTO LOGIN =====
-window.onload = function(){
-  if(memory.name){
-    document.getElementById("loginBox").style.display="none";
-    botMsg("फिर से स्वागत है " + memory.name + " 👋");
-  }
-}
-
-// ===== UI MESSAGES =====
-function userMsg(text){
-  let chat = document.getElementById("chat");
-  chat.innerHTML += `<div class="msg user">${text}</div>`;
-  chat.scrollTop = chat.scrollHeight;
-}
-function botMsg(text){
-  let chat = document.getElementById("chat");
-  chat.innerHTML += `<div class="msg bot">${text}</div>`;
-  chat.scrollTop = chat.scrollHeight;
-  speak(text);
-}
-
-// ===== SEND =====
 async function send(){
   let input = document.getElementById("userInput");
   let text = input.value.trim();
   if(text==="") return;
 
-  userMsg(text);
-  input.value="";
-  botMsg("🤖 सोच रहा हूँ...");
-
-  let reply = await askInternetAI(text);
-
-  // last "thinking" message हटाओ
   let chat = document.getElementById("chat");
-  chat.removeChild(chat.lastChild);
+  chat.innerHTML += `<div class="msg user">${text}</div>`;
+  input.value = "";
 
-  botMsg(reply);
-
-
-// ===== INTERNET AI (GROQ) =====
-async function askInternetAI(question){
-  const API_KEY = "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"
+  chat.innerHTML += `<div class="msg bot">सोच रहा हूँ... 🤔</div>`;
+  chat.scrollTop = chat.scrollHeight;
 
   try{
-    let response = await fetch("https://api.groq.com/openai/v1/chat/completions",{
+    let res = await fetch("https://api.groq.com/openai/v1/chat/completions",{
       method:"POST",
       headers:{
         "Content-Type":"application/json",
         "Authorization":"Bearer " + API_KEY
       },
-      body:JSON.stringify({
+      body: JSON.stringify({
         model:"llama3-8b-8192",
         messages:[
-          {role:"system", content:"You are a helpful AI assistant. Answer in simple Hindi or English."},
-          {role:"user", content:question}
+          {role:"system",content:"तुम एक मददगार हिंदी AI हो"},
+          {role:"user",content:text}
         ]
       })
     });
 
-    let data = await response.json();
-    return data.choices[0].message.content;
-  }
-  catch(e){
-    return "❌ Internet AI से जुड़ने में समस्या आई";
+    let data = await res.json();
+    let reply = data.choices[0].message.content;
+
+    chat.innerHTML += `<div class="msg bot">${reply}</div>`;
+    chat.scrollTop = chat.scrollHeight;
+
+  }catch(e){
+    chat.innerHTML += `<div class="msg bot">❌ Error: API connect नहीं हुई</div>`;
   }
 }
 </script>
