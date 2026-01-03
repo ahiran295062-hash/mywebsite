@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Himanshu AI</title>
+<title>Himanshu Internet AI</title>
 
 <style>
 body{
@@ -14,7 +13,7 @@ body{
   color:white;
 }
 .header{
-  background:#1e293b;
+  background:#020617;
   padding:15px;
   text-align:center;
   font-size:20px;
@@ -80,7 +79,7 @@ body{
 
 <body>
 
-<div class="header">🤖 Himanshu AI Assistant</div>
+<div class="header">🌐 Himanshu Internet AI</div>
 
 <div id="loginBox">
   <input id="username" placeholder="अपना नाम लिखें">
@@ -88,27 +87,28 @@ body{
 </div>
 
 <div class="chat" id="chat">
-  <div class="msg bot">नमस्ते 👋 मैं आपकी मदद के लिए तैयार हूँ</div>
+  <div class="msg bot">नमस्ते 👋 मैं Internet से जुड़ा AI हूँ</div>
 </div>
 
 <div class="input-box">
-  <input id="userInput" placeholder="यहाँ लिखें...">
-  <button onclick="startVoice()">🎤</button>
+  <input id="userInput" placeholder="कुछ भी पूछो...">
   <button onclick="send()">➤</button>
 </div>
 
 <script>
+// ===== MEMORY =====
 let memory = {
-  name: localStorage.getItem("name") || "",
-  study: localStorage.getItem("study") || ""
+  name: localStorage.getItem("name") || ""
 };
 
+// ===== SPEAK =====
 function speak(text){
   let u = new SpeechSynthesisUtterance(text);
-  u.lang="hi-IN";
+  u.lang = "hi-IN";
   speechSynthesis.speak(u);
 }
 
+// ===== LOGIN =====
 function login(){
   let name = document.getElementById("username").value.trim();
   if(name==="") return;
@@ -118,6 +118,7 @@ function login(){
   botMsg("स्वागत है " + name + " 😊");
 }
 
+// ===== AUTO LOGIN =====
 window.onload = function(){
   if(memory.name){
     document.getElementById("loginBox").style.display="none";
@@ -125,12 +126,12 @@ window.onload = function(){
   }
 }
 
+// ===== UI MESSAGES =====
 function userMsg(text){
   let chat = document.getElementById("chat");
   chat.innerHTML += `<div class="msg user">${text}</div>`;
   chat.scrollTop = chat.scrollHeight;
 }
-
 function botMsg(text){
   let chat = document.getElementById("chat");
   chat.innerHTML += `<div class="msg bot">${text}</div>`;
@@ -138,55 +139,51 @@ function botMsg(text){
   speak(text);
 }
 
-function aiReply(text){
-  text = text.toLowerCase();
-
-  if(text.includes("name is")){
-    let n = text.split("name is")[1].trim();
-    memory.name = n;
-    localStorage.setItem("name", n);
-    return "ठीक है, मैं याद रखूँगा आपका नाम " + n;
-  }
-
-  if(text.includes("study")){
-    memory.study = text;
-    localStorage.setItem("study", text);
-    return "बहुत बढ़िया 👍 आपकी पढ़ाई याद रख ली";
-  }
-
-  if(text.includes("hello") || text.includes("hi")){
-    return "नमस्ते " + (memory.name || "") + " 😊";
-  }
-
-  if(text.includes("help")){
-    return "मैं पढ़ाई, AI और वेबसाइट से जुड़ी मदद कर सकता हूँ";
-  }
-
-  return "मैं समझ रहा हूँ 🤖 कृपया थोड़ा और स्पष्ट लिखें";
-}
-
-function send(){
+// ===== SEND =====
+async function send(){
   let input = document.getElementById("userInput");
   let text = input.value.trim();
   if(text==="") return;
+
   userMsg(text);
   input.value="";
-  let reply = aiReply(text);
-  setTimeout(()=>botMsg(reply),500);
-}
+  botMsg("🤖 सोच रहा हूँ...");
 
-function startVoice(){
-  if(!('webkitSpeechRecognition' in window)){
-    alert("Voice support नहीं है");
-    return;
+  let reply = await askInternetAI(text);
+
+  // last "thinking" message हटाओ
+  let chat = document.getElementById("chat");
+  chat.removeChild(chat.lastChild);
+
+  botMsg(reply);
+
+
+// ===== INTERNET AI (GROQ) =====
+async function askInternetAI(question){
+  const API_KEY = "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"
+
+  try{
+    let response = await fetch("https://api.groq.com/openai/v1/chat/completions",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + API_KEY
+      },
+      body:JSON.stringify({
+        model:"llama3-8b-8192",
+        messages:[
+          {role:"system", content:"You are a helpful AI assistant. Answer in simple Hindi or English."},
+          {role:"user", content:question}
+        ]
+      })
+    });
+
+    let data = await response.json();
+    return data.choices[0].message.content;
   }
-  let r = new webkitSpeechRecognition();
-  r.lang="hi-IN";
-  r.onresult = function(e){
-    document.getElementById("userInput").value = e.results[0][0].transcript;
-    send();
+  catch(e){
+    return "❌ Internet AI से जुड़ने में समस्या आई";
   }
-  r.start();
 }
 </script>
 
