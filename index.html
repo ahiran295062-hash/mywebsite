@@ -1,28 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My First Website</title>
+  <title>Himanshu | My Website</title>
 
   <style>
     body {
-      background-color: #f0f8ff;
+      background-color: #eef2f3;
       font-family: Arial, sans-serif;
       text-align: center;
-      padding-top: 50px;
+      padding: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      max-width: 420px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.2);
     }
 
     h1 {
       color: #2c3e50;
-      font-size: 36px;
+    }
+
+    h2 {
+      color: #3498db;
     }
 
     p {
       color: #555;
-      font-size: 18px;
+      font-size: 16px;
+      line-height: 1.6;
     }
 
     button {
-      background-color: #3498db;
+      background-color: #27ae60;
       color: white;
       border: none;
       padding: 12px 25px;
@@ -33,34 +46,29 @@
     }
 
     button:hover {
-      background-color: #217dbb;
-    }
-
-    .box {
-      background: white;
-      padding: 25px;
-      margin: auto;
-      width: 90%;
-      max-width: 400px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      background-color: #1e8449;
     }
   </style>
 
   <script>
-    function showMessage() {
-      alert("🎉 Congratulations! Button working perfectly!");
+    function contactMe() {
+      alert("📧 Contact me soon! Website under progress 😄");
     }
   </script>
 </head>
 
 <body>
 
-  <div class="box">
-    <h1>Hello World 🎉</h1>
-    <p>My first website by mobile phone</p>
+  <div class="card">
+    <h1>Hello 👋</h1>
+    <h2>I am Himanshu</h2>
 
-    <button onclick="showMessage()">Click Me</button>
+    <p>
+      I am a student and I am learning web development using my mobile phone.
+      This is my first personal website created with HTML, CSS and JavaScript.
+    </p>
+
+    <button onclick="contactMe()">Contact Me</button>
   </div>
 
 </body>
