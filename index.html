@@ -67,6 +67,28 @@
     }
   </script>
 </head>
+  <script>
+function talk() {
+  let user = document.getElementById("userInput").value.toLowerCase();
+  let reply = document.getElementById("reply");
+
+  if (user.includes("name")) {
+    reply.innerText = "My name is Himanshu's AI 🤖";
+  }
+  else if (user.includes("hello")) {
+    reply.innerText = "Hello! Kaise ho 😊";
+  }
+  else if (user.includes("study")) {
+    reply.innerText = "Daily consistency hi success ka secret hai 💪📚";
+  }
+  else if (user.includes("who are you")) {
+    reply.innerText = "I am a simple AI created by Himanshu 😎";
+  }
+  else {
+    reply.innerText = "Sorry, main abhi seekh raha hoon 😅";
+  }
+}
+  </script>
 
 <body>
 
