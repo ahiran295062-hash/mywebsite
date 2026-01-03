@@ -1,3 +1,4 @@
+alert("JS LOADED");
 async function askAI() {
   const replyBox = document.getElementById("reply");
 
