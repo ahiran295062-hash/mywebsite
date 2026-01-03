@@ -1,19 +1,13 @@
 async function askAI() {
-  const response = await fetch(
-    "https://himanshu-ai-worker.ahiran-295062.workers.dev",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        message: "Hello AI"
-      })
-    }
-  );
+  const replyBox = document.getElementById("reply");
 
-  const data = await response.json();
-  console.log(data.reply);
+  replyBox.innerText = "सोच रहा हूँ...";
+
+  try {
+    const res = await fetch("https://api.quotable.io/random");
+    const data = await res.json();
+    replyBox.innerText = data.content;
+  } catch (err) {
+    replyBox.innerText = "Error आया, फिर से try करो";
+  }
 }
-
-askAI();
