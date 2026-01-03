@@ -68,6 +68,7 @@ button{
   <button onclick="getOnlineQuote()">🌐 Online Quote</button>
 <div class="input-box">
   <input type="text" id="userInput" placeholder="Message लिखो...">
+<button onclick="askAI()">Ask AI</button>
   <button onclick="send()">➤</button>
 </div>
 
@@ -134,6 +135,18 @@ async function getOnlineQuote() {
 
   chat.innerHTML += `<div class="msg bot">🌐 Quote: "${data.content}"</div>`;
   chat.scrollTop = chat.scrollHeight;
+}
+</script>
+async function askAI() {
+  let input = document.getElementById("userInput").value;
+  let chat = document.getElementById("chat");
+
+  chat.innerHTML += `<div class="msg user">${input}</div>`;
+
+  let res = await fetch("https://api.quotable.io/random");
+  let data = await res.json();
+
+  chat.innerHTML += `<div class="msg bot">🌐 "${data.content}"</div>`;
 }
 </script>
 
