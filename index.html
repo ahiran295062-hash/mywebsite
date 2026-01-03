@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
   <title>My First Website</title>
@@ -20,9 +21,24 @@
       font-size: 18px;
     }
 
+    button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    button:hover {
+      background-color: #217dbb;
+    }
+
     .box {
       background: white;
-      padding: 20px;
+      padding: 25px;
       margin: auto;
       width: 90%;
       max-width: 400px;
@@ -30,6 +46,12 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
   </style>
+
+  <script>
+    function showMessage() {
+      alert("🎉 Congratulations! Button working perfectly!");
+    }
+  </script>
 </head>
 
 <body>
@@ -37,6 +59,8 @@
   <div class="box">
     <h1>Hello World 🎉</h1>
     <p>My first website by mobile phone</p>
+
+    <button onclick="showMessage()">Click Me</button>
   </div>
 
 </body>
